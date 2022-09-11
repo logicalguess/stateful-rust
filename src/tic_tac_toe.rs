@@ -30,10 +30,10 @@ pub enum TicTacToeInput {
 
 #[derive(PartialEq, Debug)]
 pub enum TicTacToeEvent {
-    Moved(Player, usize, usize),
+    Moved(Player, Index, Index),
     Exited,
-    MovedAndWon(Player, usize, usize),
-    MovedAndTie(Player, usize, usize),
+    MovedAndWon(Player, Index, Index),
+    MovedAndTie(Player, Index, Index),
     InputIgnored,
 }
 
@@ -116,7 +116,8 @@ fn is_tie(board: Board) -> bool {
 
 fn update(state_and_input: (&mut TicTacToeState, TicTacToeInput)) -> TicTacToeEvent {
     match state_and_input {
-        (state, Move(row, column)) if state.board[row as usize][column as usize] != None => {
+        (state, Move(row, column))
+                if state.board[row as usize][column as usize] != None => {
             println!("Row {}, column {} not available", row as usize, column as usize);
             InputIgnored
         }
@@ -130,11 +131,11 @@ fn update(state_and_input: (&mut TicTacToeState, TicTacToeInput)) -> TicTacToeEv
             }
 
             if is_winner(state.board, player) {
-                MovedAndWon(player, row as usize, column as usize)
+                MovedAndWon(player, row, column)
             } else if is_tie(state.board) {
-                MovedAndTie(player, row as usize, column as usize)
+                MovedAndTie(player, row, column)
             } else {
-                Moved(player, row as usize, column as usize)
+                Moved(player, row, column)
             }
         }
         (_, Exit) => {
@@ -175,6 +176,7 @@ impl TicTacToeState {
 
 impl Display for TicTacToeState {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f)?;
         for (row_idx, row) in self.board.iter().enumerate() {
             write!(f, "{} ", row_idx)?;
             write!(f, "     ")?;
@@ -214,10 +216,13 @@ fn listener() -> (char, char) {
     (c0, c1)
 }
 
-pub type TicTacToeGame = Application<(char, char), TicTacToeState, TicTacToeInput, TicTacToeEvent>;
+pub type TicTacToeGame = Application<(char, char),
+            TicTacToeState, TicTacToeInput, TicTacToeEvent>;
 
 impl TicTacToeGame {
-    pub(crate) fn new() -> Application<(char, char), TicTacToeInput, TicTacToeState, TicTacToeEvent> {
+    pub(crate) fn new() -> Application<(char, char),
+            TicTacToeInput, TicTacToeState, TicTacToeEvent> {
+
         Application {
             state: TicTacToeState::new(),
             interaction_listener: &listener,

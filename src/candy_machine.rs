@@ -11,9 +11,16 @@ pub struct CandyMachineState {
     coins: usize,
 }
 
-impl fmt::Display for CandyMachineState {
+impl Display for CandyMachineState {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Locked: {},  Coins: {}, Candies: {}", self.locked, self.coins, self.candies)
+        writeln!(f)?;
+        write!(f, "Candy machine state: locked: {},  coins: {}, candies: {}", self.locked, self.coins, self.candies)
+    }
+}
+
+impl CandyMachineState {
+    pub fn new() -> Self {
+        Self {locked: false, candies: 10, coins: 0}
     }
 }
 
@@ -33,7 +40,6 @@ pub enum CandyMachineEvent {
 }
 
 fn listener() -> char {
-
     let mut input = String::new();
     io::stdin().read_line(&mut input).unwrap();
     input.chars().nth(0).unwrap()
@@ -82,12 +88,15 @@ fn update(state_and_input: (&mut CandyMachineState, CandyMachineInput)) -> Candy
     }
 }
 
-pub type CandyMachine = Application<char, CandyMachineState, CandyMachineInput, CandyMachineEvent>;
+pub type CandyMachine = Application<char,
+            CandyMachineState, CandyMachineInput, CandyMachineEvent>;
 
 impl  CandyMachine {
-    pub(crate) fn new() -> Application<char, CandyMachineInput, CandyMachineState, CandyMachineEvent> {
+    pub(crate) fn new() -> Application<char,
+            CandyMachineInput, CandyMachineState, CandyMachineEvent> {
+
         Application {
-            state: CandyMachineState {locked: false, candies: 10, coins: 0},
+            state: CandyMachineState::new(),
             interaction_listener: &listener,
             interaction_handler: &to_input,
             domain_logic: &update,
