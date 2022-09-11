@@ -1,5 +1,3 @@
-## The Structure of Stateful Computations
-
 ![](./images/stateful.001.jpeg)
 ![](./images/stateful.002.jpeg)
 ![](./images/stateful.003.jpeg)
