@@ -80,24 +80,24 @@ fn to_input((c0, c1): (char, char)) -> TicTacToeInput {
     }
 }
 
-fn is_winner(board: Board, p: Player) -> bool {
+fn is_winner(board: Board, player: Player) -> bool {
     for i in 0..2 {
-        if (Some(p), Some(p), Some(p)) ==
+        if (Some(player), Some(player), Some(player)) ==
             (board[i][0], board[i][1], board[i][2]) {
             return true;
         }
     }
 
     for j in 0..2 {
-        if (Some(p), Some(p), Some(p)) ==
+        if (Some(player), Some(player), Some(player)) ==
             (board[0][j], board[1][j], board[2][j]) {
             return true;
         }
     }
 
-    if (Some(p), Some(p), Some(p)) ==
+    if (Some(player), Some(player), Some(player)) ==
         (board[0][0], board[1][1], board[2][2]) ||
-        (Some(p), Some(p), Some(p)) ==
+        (Some(player), Some(player), Some(player)) ==
             (board[0][2], board[1][1], board[2][0]) {
         true
     } else {
@@ -116,25 +116,25 @@ fn is_tie(board: Board) -> bool {
 
 fn update(state_and_input: (&mut TicTacToeState, TicTacToeInput)) -> TicTacToeEvent {
     match state_and_input {
-        (state, Move(r, c)) if state.board[r as usize][c as usize] != None => {
-            println!("Row {}, column {} not available", r as usize, c as usize);
+        (state, Move(row, column)) if state.board[row as usize][column as usize] != None => {
+            println!("Row {}, column {} not available", row as usize, column as usize);
             InputIgnored
         }
 
-        (state, Move(r, c)) => {
-            let p = state.turn;
-            state.board[r as usize][c as usize] = Some(p);
-            match p {
+        (state, Move(row, column)) => {
+            let player = state.turn;
+            state.board[row as usize][column as usize] = Some(player);
+            match player {
                 X => state.turn = O,
                 O => state.turn = X,
             }
 
-            if is_winner(state.board, p) {
-                MovedAndWon(p, r as usize, c as usize)
+            if is_winner(state.board, player) {
+                MovedAndWon(player, row as usize, column as usize)
             } else if is_tie(state.board) {
-                MovedAndTie(p, r as usize, c as usize)
+                MovedAndTie(player, row as usize, column as usize)
             } else {
-                Moved(p, r as usize, c as usize)
+                Moved(player, row as usize, column as usize)
             }
         }
         (_, Exit) => {
@@ -168,7 +168,7 @@ fn process_event(event: TicTacToeEvent) {
 }
 
 impl TicTacToeState {
-    pub fn init() -> TicTacToeState {
+    pub fn new() -> TicTacToeState {
         TicTacToeState::default()
     }
 }
@@ -219,7 +219,7 @@ pub type TicTacToeGame = Application<(char, char), TicTacToeState, TicTacToeInpu
 impl TicTacToeGame {
     pub(crate) fn new() -> Application<(char, char), TicTacToeInput, TicTacToeState, TicTacToeEvent> {
         Application {
-            state: TicTacToeState::init(),
+            state: TicTacToeState::new(),
             interaction_listener: &listener,
             interaction_handler: &to_input,
             domain_logic: &update,
