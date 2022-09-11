@@ -5,7 +5,7 @@ use crate::tic_tac_toe::Index::{One, Two, Zero};
 use crate::tic_tac_toe::Player::{O, X};
 use crate::tic_tac_toe::TicTacToeEvent::{Exited, InputIgnored, Moved, MovedAndTie, MovedAndWon};
 use crate::tic_tac_toe::TicTacToeInput::{Exit, Move, Unknown};
-use crate::types::Application;
+use crate::application::Application;
 
 #[derive(Default, Clone, Copy, PartialEq, Debug)]
 pub enum Player {

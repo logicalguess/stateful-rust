@@ -2,7 +2,7 @@ use std::{fmt, io, process};
 use std::fmt::{Debug, Display};
 use crate::candy_machine::CandyMachineEvent::{CandyReleased, CoinReceived, Exited, InputIgnored};
 use crate::candy_machine::CandyMachineInput::{Coin, Exit, Turn, Unknown};
-use crate::types::Application;
+use crate::application::Application;
 
 #[derive(Debug)]
 pub struct CandyMachineState {

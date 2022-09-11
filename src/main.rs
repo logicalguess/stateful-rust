@@ -1,5 +1,5 @@
 mod candy_machine;
-mod types;
+mod application;
 mod tic_tac_toe;
 
 fn main() {
